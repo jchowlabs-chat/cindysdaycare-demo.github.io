@@ -1556,6 +1556,14 @@ footer p {
         padding-left: 0;
         text-align: center;
         align-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .neighborhood-lead .section-rule {
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .neighborhood-lead .neighborhood-highlights {
@@ -1564,19 +1572,30 @@ footer p {
 
     .contact-info {
         padding-left: 0;
-        flex-direction: row;
+        display: flex;
+        flex-wrap: wrap;
         justify-content: center;
-        align-items: flex-start;
-        gap: 0.25rem;
+        text-align: center;
+        gap: 0;
+    }
+
+    .contact-info .section-title-large,
+    .contact-info .section-rule {
+        width: 100%;
+        text-align: center;
+    }
+
+    .contact-info .section-rule {
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .contact-info .contact-item {
+        flex: 0 0 50%;
         flex-direction: column;
         align-items: center;
         text-align: center;
         padding: 0.75rem 0.5rem;
-        flex: 1;
-        min-width: 0;
     }
 
     .contact-info .contact-icon {
