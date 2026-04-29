@@ -1552,6 +1552,16 @@ footer p {
         height: 260px;
     }
 
+    .neighborhood-lead {
+        padding-left: 0;
+        text-align: center;
+        align-items: center;
+    }
+
+    .neighborhood-lead .neighborhood-highlights {
+        align-items: center;
+    }
+
     .contact-info {
         padding-left: 0;
         align-items: center;
@@ -1560,6 +1570,11 @@ footer p {
 
     .contact-info .contact-item {
         justify-content: center;
+        text-align: center;
+    }
+
+    .contact-info .contact-details {
+        text-align: center;
     }
 
     .contact-form-card {
