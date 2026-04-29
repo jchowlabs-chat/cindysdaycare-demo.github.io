@@ -1,29 +1,40 @@
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://cindysdaycare-demo.github.io',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+const ALLOWED_ORIGINS = [
+  'https://cindysdaycare.com',
+  'https://www.cindysdaycare.com',
+  'https://cindysdaycare-demo.github.io',
+];
+
+function getCorsHeaders(request) {
+  const origin = (request && request.headers && request.headers.get('Origin')) || '';
+  const allowed = ALLOWED_ORIGINS.find(o => origin === o) || ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
+  };
+}
 
 export default {
   async fetch(request, env) {
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: getCorsHeaders(request) });
     }
 
     if (request.method !== 'POST') {
-      return json({ error: 'Method not allowed' }, 405);
+      return json(request, { error: 'Method not allowed' }, 405);
     }
 
     let body;
     try {
       body = await request.json();
     } catch {
-      return json({ error: 'Invalid JSON' }, 400);
+      return json(request, { error: 'Invalid JSON' }, 400);
     }
 
     const { name, phone, message } = body;
     if (!name || !phone) {
-      return json({ error: 'Missing required fields: name and phone' }, 400);
+      return json(request, { error: 'Missing required fields: name and phone' }, 400);
     }
 
     const text = message
@@ -46,16 +57,16 @@ export default {
 
     if (!resendRes.ok) {
       const err = await resendRes.text();
-      return json({ error: 'Submission failed', detail: err }, 500);
+      return json(request, { error: 'Submission failed', detail: err }, 500);
     }
 
-    return json({ success: true });
+    return json(request, { success: true });
   },
 };
 
-function json(data, status = 200) {
+function json(request, data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    headers: { ...getCorsHeaders(request), 'Content-Type': 'application/json' },
   });
 }

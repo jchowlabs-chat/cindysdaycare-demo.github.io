@@ -12,6 +12,8 @@
  */
 
 const ALLOWED_ORIGINS = [
+  'https://cindysdaycare.com',
+  'https://www.cindysdaycare.com',
   'https://cindysdaycare-demo.github.io',
   'http://localhost',
   'http://localhost:3000',
