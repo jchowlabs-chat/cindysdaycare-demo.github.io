@@ -221,5 +221,76 @@
     </footer>
 
     <script src="app.js"></script>
+
+<!-- Shared SVG symbol -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="icon-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="2" width="6" height="12" rx="3"/>
+    <path d="M5 10a7 7 0 0 0 14 0"/>
+    <line x1="12" y1="19" x2="12" y2="22"/>
+  </symbol>
+</svg>
+
+<!-- Voice Concierge Toast -->
+<div id="va-toast-wrapper" style="display:none">
+<div class="va-toast" id="va-toast" role="button" tabindex="0" aria-label="Open voice assistant">
+
+  <!-- Drag handle — mobile swipe-down to close -->
+  <div class="va-toast-handle"><span></span></div>
+
+  <!-- ── Collapsed pill (idle state) ── -->
+  <div class="va-toast-pill">
+    <div class="va-toast-mic">
+      <svg><use href="#icon-mic"/></svg>
+    </div>
+    <span class="va-toast-label" id="va-toast-label">Ask me about:</span>
+    <span class="va-toast-rotating" id="va-toast-rotating">
+      <span class="va-toast-rotating-word">programs</span>
+    </span>
+    <div class="va-toast-wave" id="va-dock-wave">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <button class="va-toast-pill-close" id="va-toast-pill-close" aria-label="End session">&times;</button>
+    <span class="va-toast-pill-hint">Tap to speak</span>
+  </div>
+
+  <!-- ── Expanded toast card (mobile active session) ── -->
+  <div class="va-toast-card">
+    <div class="va-toast-card-row">
+      <div class="va-toast-orb">
+        <svg><use href="#icon-mic"/></svg>
+      </div>
+      <div class="va-toast-card-text">
+        <span class="va-toast-card-primary">Ask me anything…</span>
+        <span class="va-toast-card-secondary"></span>
+      </div>
+    </div>
+    <div class="va-toast-wave" id="va-mobile-wave">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <button class="va-toast-close" id="va-toast-close" aria-label="End session">&times;</button>
+  </div>
+
+</div>
+</div><!-- /va-toast-wrapper -->
+
+<!-- Privacy Consent Banner -->
+<div class="privacy-banner" id="privacy-banner">
+  <div class="privacy-banner-content">
+    <div class="privacy-banner-text">
+      <p>This site uses an optional AI voice assistant to answer your questions.</p>
+    </div>
+    <div class="privacy-banner-actions">
+      <button class="privacy-btn privacy-btn-decline" id="privacy-decline">Decline</button>
+      <button class="privacy-btn privacy-btn-accept" id="privacy-accept">Accept</button>
+    </div>
+  </div>
+</div>
+
+<script src="static/voice.js"></script>
 </body>
 </html>

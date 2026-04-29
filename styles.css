@@ -595,6 +595,750 @@ footer p {
     opacity: 0.8;
 }
 
+/* ============================================================
+   Voice Concierge — Toast Launcher
+   ============================================================ */
+
+/* ---------- CSS Variables ---------- */
+:root {
+    --va-grad-idle: radial-gradient(circle at 35% 35%, #38bdf8, #1d9fd8, #2563eb, #6366f1);
+    --va-grad-connecting: radial-gradient(circle at 35% 35%, #38bdf8, #2563eb);
+    --va-grad-speaking: radial-gradient(circle at 35% 35%, #60a5fa, #3b82f6, #2563eb);
+    --va-grad-listening: radial-gradient(circle at 35% 35%, #38bdf8, #1d9fd8, #2563eb);
+    --va-grad-error: radial-gradient(circle at 35% 35%, #e5e5e5, #a3a3a3);
+    --va-mobile-shadow: 0 -6px 40px rgba(0, 0, 0, 0.18), 0 -1px 10px rgba(0, 0, 0, 0.10);
+    --va-mobile-bg: linear-gradient(rgba(0,0,0,0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.028) 1px, transparent 1px), #ffffff;
+}
+
+/* ---------- Shared keyframes ---------- */
+
+@keyframes va-mic-ring {
+  0%   { transform: rotate(0deg) scale(1); }
+  8%   { transform: rotate(18deg) scale(1.18); }
+  24%  { transform: rotate(-18deg) scale(1.18); }
+  40%  { transform: rotate(18deg) scale(1.15); }
+  56%  { transform: rotate(-18deg) scale(1.12); }
+  72%  { transform: rotate(12deg) scale(1.06); }
+  88%  { transform: rotate(-5deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.va-toast-mic--ring {
+  animation: va-mic-ring 0.8s ease-in-out;
+}
+
+@keyframes va-blink {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+
+/* ── Toast container — pill (idle) & card (active) ───────── */
+.va-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: #f7f8f7;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  border-radius: 999px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+.va-toast:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
+  transform: translateX(-50%) translateY(-1px);
+}
+
+/* ── Drag handle (hidden by default) ─────────────────────── */
+.va-toast-handle {
+  display: none;
+  justify-content: center;
+  padding: 10px 0 0;
+}
+.va-toast-handle span {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: #ccc;
+}
+
+/* ── Close button (hidden by default) ────────────────────── */
+.va-toast-close {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  z-index: 2;
+  flex-shrink: 0;
+}
+.va-toast-close:hover { color: #555; }
+
+/* ── Close button inside pill (hidden by default, shown in session-active) ── */
+.va-toast-pill-close {
+  display: none;
+  background: none;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.04);
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  margin-left: 4px;
+}
+.va-toast-pill-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #555;
+}
+
+/* ── Pill layout (idle state) ────────────────────────────── */
+.va-toast-pill {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 25px 17px 10px;
+  transition: opacity 0.25s ease;
+  position: relative;
+}
+
+/* "Tap to speak" hint, centered across full pill width */
+.va-toast-pill-hint {
+  position: absolute;
+  bottom: 11px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 9px;
+  font-weight: 300;
+  color: #aaa;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* Hide hint during active session or error */
+.va-toast.session-active .va-toast-pill-hint,
+.va-toast.error .va-toast-pill-hint {
+  display: none;
+}
+.va-toast.session-active .va-toast-pill,
+.va-toast.error .va-toast-pill {
+  padding-bottom: 10px;
+}
+
+/* Mic icon button */
+.va-toast-mic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--va-grad-idle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.va-toast-mic svg {
+  width: 17px;
+  height: 17px;
+  color: #fff;
+}
+
+/* Label */
+.va-toast-label {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a4a4a;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Rotating word (slot-machine flip) */
+.va-toast-rotating {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  overflow: hidden;
+  transition: width 300ms ease;
+}
+.va-toast-rotating-word {
+  display: block;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #6b7280;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Flip-out: current word slides up and fades */
+.va-toast-rotating-word.flip-out {
+  animation: va-flip-out 0.35s ease-in forwards;
+}
+/* Flip-in: new word slides up from below */
+.va-toast-rotating-word.flip-in {
+  animation: va-flip-in 0.35s ease-out forwards;
+}
+
+@keyframes va-flip-out {
+  0%   { transform: translateY(-50%);  opacity: 1; }
+  100% { transform: translateY(-150%); opacity: 0; }
+}
+@keyframes va-flip-in {
+  0%   { transform: translateY(50%);  opacity: 0; }
+  100% { transform: translateY(-50%); opacity: 1; }
+}
+
+/* Attention pulse when pill first expands */
+@keyframes va-toast-attention {
+  0%   { box-shadow: 0 2px 16px rgba(0,0,0,0.10); }
+  40%  { box-shadow: 0 4px 28px rgba(37,99,235,0.22), 0 0 0 5px rgba(37,99,235,0.08); }
+  100% { box-shadow: 0 2px 16px rgba(0,0,0,0.10); }
+}
+
+.va-toast--attention {
+  animation: va-toast-attention 0.9s ease-out forwards;
+}
+
+/* Voice wave animation */
+.va-toast-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+  padding-left: 4px;
+}
+
+/* Desktop pill: wave bars driven by real-time RAF — no CSS animation */
+.va-toast-wave span {
+  display: block;
+  width: 2px;
+  height: 3px;
+  background: #b5a99a;
+  border-radius: 1px;
+  transition: height 0.04s linear;
+}
+
+/* Idle state: subtle CSS breathing animation on desktop pill */
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span {
+  animation: va-toast-wave-idle 1.8s ease-in-out infinite;
+}
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(1) { animation-delay: 0s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(2) { animation-delay: 0.18s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(3) { animation-delay: 0.36s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(4) { animation-delay: 0.54s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(5) { animation-delay: 0.72s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(6) { animation-delay: 0.54s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(7) { animation-delay: 0.36s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(8) { animation-delay: 0.18s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(9) { animation-delay: 0.09s; }
+.va-toast:not(.session-active):not(.connecting) .va-toast-wave span:nth-child(10) { animation-delay: 0s; }
+
+@keyframes va-toast-wave-idle {
+  0%, 100% { height: 3px; }
+  50%      { height: 9px; }
+}
+
+/* ── Card layout (hidden by default) ──────────────────────── */
+.va-toast-card {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  padding: 24px 28px 20px;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+/* Card row — orb + status word */
+.va-toast-card-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* Card text block (mobile: primary + secondary stacked) */
+.va-toast-card-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.va-toast-card-primary {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a4a4a;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.va-toast-card-secondary {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: #aaa;
+  letter-spacing: 0.5px;
+  min-height: 16px;
+}
+
+/* Orb (larger mic icon for card) */
+.va-toast-orb {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--va-grad-idle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.06);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  animation: va-orb-ring-idle 3s ease-in-out infinite;
+  cursor: pointer;
+}
+
+@keyframes va-orb-ring-idle {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.06); }
+  50%      { box-shadow: 0 0 0 7px rgba(37, 99, 235, 0.09); }
+}
+.va-toast-orb svg {
+  width: 13px;
+  height: 13px;
+  color: #fff;
+}
+
+/* ── SESSION-ACTIVE: desktop stays as pill, mobile uses toast ── */
+.va-toast.session-active {
+  cursor: pointer;
+}
+
+.va-toast.session-active:hover {
+  transform: translateX(-50%);
+}
+
+/* Desktop session-active: keep pill, just swap content */
+.va-toast.session-active .va-toast-pill {
+  display: flex;
+}
+.va-toast.session-active .va-toast-card {
+  display: none;
+}
+
+/* Hide label + rotating words, show wave + close in pill */
+.va-toast.session-active .va-toast-rotating {
+  display: none;
+}
+.va-toast.session-active .va-toast-pill-close {
+  display: flex;
+}
+
+/* Active session: bars driven by RAF — clear idle animation */
+.va-toast.session-active .va-toast-wave span,
+.va-toast.connecting .va-toast-wave span {
+  animation: none;
+}
+
+/* ── Orb animations during active session ────────────────── */
+.va-toast.connecting .va-toast-orb {
+  background: var(--va-grad-connecting);
+  animation: va-blink 1.8s ease-in-out infinite;
+}
+
+.va-toast.speaking .va-toast-orb {
+  background: var(--va-grad-speaking);
+  animation: va-orb-speaking-rings 1.5s ease-out infinite;
+}
+
+@keyframes va-orb-speaking-rings {
+  0%   { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.25), 0 0 0 0 rgba(56, 189, 248, 0.15), 0 0 12px 4px rgba(56, 189, 248, 0.10); }
+  50%  { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.08), 0 0 0 16px rgba(56, 189, 248, 0.04), 0 0 16px 6px rgba(56, 189, 248, 0.08); }
+  100% { box-shadow: 0 0 0 14px rgba(59, 130, 246, 0), 0 0 0 24px rgba(56, 189, 248, 0), 0 0 12px 4px rgba(56, 189, 248, 0.10); }
+}
+
+.va-toast.active .va-toast-orb {
+  background: var(--va-grad-listening);
+  animation: va-orb-listening-rings 2.5s ease-in-out infinite;
+}
+
+@keyframes va-orb-listening-rings {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.08), 0 0 14px 5px rgba(56, 189, 248, 0.08); }
+  50%      { box-shadow: 0 0 0 8px rgba(56, 189, 248, 0.12), 0 0 20px 8px rgba(56, 189, 248, 0.12); }
+}
+
+/* Keep pill mic animations for active session states */
+.va-toast.connecting .va-toast-mic {
+  background: var(--va-grad-connecting);
+  animation: va-blink 1.8s ease-in-out infinite;
+}
+
+.va-toast.speaking .va-toast-mic {
+  background: var(--va-grad-speaking);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.va-toast.active .va-toast-mic {
+  background: var(--va-grad-idle);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+}
+
+.va-toast.error .va-toast-mic {
+  background: var(--va-grad-error);
+}
+
+/* ── Declined consent: gray orb, clickable to re-open banner ── */
+.va-toast.va-consent-declined {
+  cursor: pointer;
+}
+@media (min-width: 481px) {
+  .va-toast.va-consent-declined:hover {
+    transform: translateX(-50%);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
+  }
+}
+.va-toast.va-consent-declined .va-toast-mic,
+.va-toast.va-consent-declined .va-toast-orb {
+  background: var(--va-grad-error);
+  animation: none;
+  box-shadow: none;
+}
+.va-toast.va-consent-declined .va-toast-pill-hint {
+  color: #bbb;
+}
+
+/* ── Toast responsive — Mobile 3-state toast (translateY engine) ── */
+@media (max-width: 480px) {
+
+  /* ── BASE: full-height bottom-anchored sheet, hidden via translateY ── */
+  .va-toast {
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    height: 170px;
+    overflow: hidden;
+    transform: translateY(170px);
+    border-radius: 20px 20px 0 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: none;
+    box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.18), 0 -1px 8px rgba(0, 0, 0, 0.10);
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform;
+    touch-action: none;
+    transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1),
+                opacity 0.3s ease,
+                box-shadow 0.25s ease;
+  }
+  .va-toast:hover {
+    transform: translateY(70px);
+    box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.18), 0 -1px 8px rgba(0, 0, 0, 0.10);
+  }
+
+  /* Visible: toast slides in to PEEK position (100px visible) */
+  .va-toast.va-toast--visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(70px);
+  }
+
+  /* Ready: more card visible (118px) */
+  .va-toast.va-toast--ready {
+    transform: translateY(52px);
+    background: var(--va-mobile-bg);
+    background-size: 1.5px 1.5px;
+    box-shadow: var(--va-mobile-shadow);
+  }
+
+  /* Active: fully visible */
+  .va-toast.session-active {
+    transform: translateY(0);
+    background: var(--va-mobile-bg);
+    background-size: 1.5px 1.5px;
+    box-shadow: var(--va-mobile-shadow);
+    animation: none;
+  }
+
+  /* Hide the desktop pill layout on mobile */
+  .va-toast-pill {
+    display: none;
+  }
+
+  /* Show card on mobile */
+  .va-toast .va-toast-card {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    align-items: center;
+    padding: 14px 20px 18px;
+    gap: 14px;
+  }
+
+  .va-toast .va-toast-card-text {
+    display: flex;
+    gap: 15px;
+  }
+
+  /* Drag handle always visible on mobile */
+  .va-toast .va-toast-handle {
+    display: flex;
+    padding: 8px 0 6px;
+  }
+
+  /* ── Card layout: orb left-anchored, text centered ── */
+  .va-toast .va-toast-card-row {
+    position: relative;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+  }
+  .va-toast .va-toast-card-row .va-toast-orb {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .va-toast .va-toast-orb {
+    width: 40px;
+    height: 40px;
+  }
+  .va-toast .va-toast-orb svg {
+    width: 13px;
+    height: 13px;
+  }
+  .va-toast .va-toast-card-text {
+    align-items: center;
+  }
+  .va-toast .va-toast-card-primary {
+    font-size: 16px;
+  }
+  .va-toast .va-toast-card-secondary {
+    font-size: 14px;
+  }
+
+  /* Close button: hidden in peek, shown in ready/active */
+  .va-toast .va-toast-close {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.04);
+    font-size: 18px;
+    color: #999;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+  }
+  .va-toast.va-toast--ready .va-toast-close,
+  .va-toast.session-active .va-toast-close {
+    display: flex;
+  }
+
+  /* SESSION-ACTIVE mobile overrides */
+  .va-toast.session-active .va-toast-pill,
+  .va-toast.session-active .va-toast-pill-close {
+    display: none;
+  }
+  .va-toast.session-active .va-toast-card {
+    display: flex;
+  }
+  .va-toast.session-active .va-toast-card-row {
+    flex-shrink: unset;
+  }
+  .va-toast.session-active:hover {
+    transform: translateY(0);
+  }
+
+  /* ── Mobile wave: 20 bars, real-time RAF, hidden until session ── */
+  .va-toast .va-toast-wave {
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+    height: 28px;
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom: 12px;
+  }
+  .va-toast .va-toast-wave span {
+    width: 2px;
+    border-radius: 2px;
+    background: #2563eb;
+    height: 3px;
+    transition: height 0.04s linear;
+  }
+  .va-toast.session-active .va-toast-wave {
+    display: flex;
+  }
+  /* Clear idle animation on mobile wave bars */
+  .va-toast .va-toast-wave span {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   Privacy Consent Banner
+   ============================================================ */
+
+.privacy-banner {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: fit-content;
+  min-width: 60%;
+  max-width: calc(100% - 24px);
+  background: #fefefe;
+  border-top: 1px solid #e8f5ed;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  padding: 14px;
+  z-index: 9998;
+  display: none;
+  border-radius: 12px 12px 0 0;
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.privacy-banner.show {
+  display: block;
+}
+
+.privacy-banner.show.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.privacy-banner-content {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+
+.privacy-banner-text {
+  flex: 1;
+}
+
+.privacy-banner-text p {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.privacy-banner-text a {
+  color: #047857;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.privacy-banner-text a:hover {
+  color: #035c44;
+}
+
+.privacy-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.privacy-btn {
+  padding: 7px 18px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  min-width: 110px;
+}
+
+.privacy-btn-decline {
+  background: #f9fafb;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.privacy-btn-decline:hover {
+  background: #e5e7eb;
+  color: #4a4a4a;
+}
+
+.privacy-btn-accept {
+  background: #047857;
+  color: #fff;
+  border: 1px solid #047857;
+}
+
+.privacy-btn-accept:hover {
+  background: #035c44;
+  border-color: #035c44;
+}
+
+@media (max-width: 768px) {
+  .privacy-banner {
+    padding: 12px;
+    width: calc(100% - 72px);
+    min-width: unset;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .privacy-banner-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .privacy-banner-text p {
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .privacy-banner-actions {
+    width: 100%;
+  }
+
+  .privacy-btn {
+    flex: 1;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .gallery-section {
