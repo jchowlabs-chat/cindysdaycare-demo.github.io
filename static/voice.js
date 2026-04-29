@@ -329,12 +329,16 @@ var PRIVACY_NOTICE_ENABLED = false;
           voiceStartTime = Date.now();
           setStatus('listening');
           if (isMobile()) startMobileWave(); else startDockWave();
+          if (window._analytics) window._analytics.send('voice_start');
         },
 
         onDisconnect: function() {
           if (myGen !== sessionGen) return;
           stopDockWave();
           stopMobileWave();
+          if (window._analytics) window._analytics.send('voice_end', {
+            duration_ms: voiceStartTime ? Date.now() - voiceStartTime : null
+          });
           conversation = null;
           setStatus('idle');
         },
@@ -356,6 +360,7 @@ var PRIVACY_NOTICE_ENABLED = false;
 
         onError: function() {
           if (myGen !== sessionGen) return;
+          if (window._analytics) window._analytics.send('voice_error', { error_type: 'session_error' });
           conversation = null;
           setStatus('error');
           setTimeout(function() { if (status === 'error') setStatus('idle'); }, 4000);
@@ -376,6 +381,7 @@ var PRIVACY_NOTICE_ENABLED = false;
       var micDenied = e && (e.name === 'NotAllowedError' || e.name === 'NotFoundError' ||
         (e.message && /microphone|permission|not allowed/i.test(e.message)));
       if (micDenied) {
+        if (window._analytics) window._analytics.send('voice_error', { error_type: 'mic_blocked' });
         setStatus('mic-blocked');
       } else {
         setStatus('error');

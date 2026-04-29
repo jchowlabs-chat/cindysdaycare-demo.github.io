@@ -212,7 +212,7 @@
                     </div>
                 </div>
                 <div class="contact-form-card">
-                    <form class="contact-form" novalidate>
+                    <form class="contact-form" id="contact-form" novalidate>
                         <div class="form-field">
                             <label for="cf-name">FULL NAME</label>
                             <input type="text" id="cf-name" name="name" autocomplete="name">
@@ -225,7 +225,8 @@
                             <label for="cf-message">MESSAGE (OPTIONAL)</label>
                             <textarea id="cf-message" name="message" rows="5"></textarea>
                         </div>
-                        <button type="submit" class="form-submit">SEND MESSAGE</button>
+                        <div id="contact-form-status" class="form-status"></div>
+                        <button type="submit" id="contact-form-submit" class="form-submit">SEND MESSAGE</button>
                     </form>
                 </div>
             </div>
@@ -238,6 +239,7 @@
     </footer>
 
     <script src="app.js"></script>
+    <script src="static/form.js"></script>
 
 <!-- Shared SVG symbol -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -308,6 +310,7 @@
   </div>
 </div>
 
+<script src="static/analytics.js"></script>
 <script src="static/voice.js"></script>
 </body>
 </html>

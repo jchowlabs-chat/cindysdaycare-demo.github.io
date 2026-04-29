@@ -621,6 +621,25 @@ nav {
     background: #047857;
 }
 
+.form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-status {
+    font-size: 0.85rem;
+    min-height: 1.2em;
+    margin-top: 0.25rem;
+}
+
+.form-status-success {
+    color: #047857;
+}
+
+.form-status-error {
+    color: #b91c1c;
+}
+
 /* Testimonials */
 .testimonials-section {
     padding: 5rem 2rem;

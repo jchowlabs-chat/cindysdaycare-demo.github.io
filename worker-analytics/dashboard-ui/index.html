@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cindy's Daycare Analytics</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="dashboard">
+    <header class="header">
+      <h1>Cindy's Daycare Analytics</h1>
+      <div class="range-btns">
+        <button data-range="1d">Today</button>
+        <button data-range="7d" class="active">7 Days</button>
+        <button data-range="30d">30 Days</button>
+        <button data-range="all">All Time</button>
+      </div>
+    </header>
+
+    <!-- Summary Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Visitors</div>
+        <div class="card-value" id="c-total">—</div>
+        <div class="card-sub" id="c-human-bot">—</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Avg Time on Site</div>
+        <div class="card-value" id="c-time">—</div>
+        <div class="card-sub" id="c-time-sub">&nbsp;</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Voice Engaged</div>
+        <div class="card-value" id="c-voice">—</div>
+        <div class="card-sub" id="c-voice-sub">of humans</div>
+      </div>
+    </div>
+
+    <!-- 2x2 Grid -->
+    <div class="grid">
+      <!-- Visitors by Day -->
+      <div class="panel">
+        <h2>Visitors by Day</h2>
+        <div id="chart-visitors" class="bar-chart"></div>
+        <div class="legend">
+          <span class="legend-dot human"></span> Human
+          <span class="legend-dot bot"></span> Bot
+        </div>
+      </div>
+
+      <!-- Devices -->
+      <div class="panel">
+        <h2>Devices</h2>
+        <div id="chart-devices" class="bar-chart"></div>
+        <div id="device-summary" class="device-summary"></div>
+      </div>
+
+      <!-- Sections -->
+      <div class="panel">
+        <h2>Sections Reached</h2>
+        <div id="chart-sections" class="bar-chart"></div>
+        <div id="scroll-depth" class="scroll-depth"></div>
+      </div>
+
+      <!-- Voice -->
+      <div class="panel">
+        <h2>Voice Concierge</h2>
+        <div id="voice-stats" class="stat-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

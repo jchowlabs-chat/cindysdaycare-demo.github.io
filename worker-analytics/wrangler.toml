@@ -1,0 +1,11 @@
+name = "cindys-daycare-dashboard"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+[assets]
+directory = "./dashboard-ui"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cindys-dashboard"
+database_id = "4dad8a82-eec5-4089-820f-34ac91fd1645"
