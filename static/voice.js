@@ -286,6 +286,32 @@ var PRIVACY_NOTICE_ENABLED = false;
         if (ending) endSession();
       }, 15000);
       return 'Session ending';
+    },
+
+    fill_form_field: function(params) {
+      var FIELD_MAP = {
+        name: 'cf-name',
+        phone: 'cf-phone',
+        message: 'cf-message'
+      };
+      var elId = FIELD_MAP[params.field];
+      if (!elId) return 'Unknown field: ' + params.field;
+      var el = document.getElementById(elId);
+      if (!el) return 'Field not found';
+      el.value = params.value;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      return 'Set ' + params.field + ' to: ' + params.value;
+    },
+
+    submit_form: function() {
+      var form = document.getElementById('contact-form');
+      if (!form) return 'Form not found';
+      var name = document.getElementById('cf-name').value;
+      var phone = document.getElementById('cf-phone').value;
+      if (!name || !phone) return 'Missing required fields: name and phone must be filled';
+      form.requestSubmit();
+      return 'Form submitted successfully';
     }
   };
 
