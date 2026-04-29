@@ -1564,17 +1564,38 @@ footer p {
 
     .contact-info {
         padding-left: 0;
-        align-items: center;
-        text-align: center;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0.25rem;
     }
 
     .contact-info .contact-item {
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
+        padding: 0.75rem 0.5rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .contact-info .contact-icon {
+        margin-top: 0;
     }
 
     .contact-info .contact-details {
         text-align: center;
+        align-items: center;
+    }
+
+    .contact-info .contact-details h3 {
+        font-size: 0.72rem;
+    }
+
+    .contact-info .contact-details p,
+    .contact-info .contact-details a {
+        font-size: 0.95rem;
+        word-break: break-word;
     }
 
     .contact-form-card {
