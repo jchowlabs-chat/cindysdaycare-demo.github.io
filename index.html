@@ -29,7 +29,7 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#neighborhood">Neighborhood</a></li>
-                <li><a href="#neighborhood" class="nav-cta">Contact</a></li>
+                <li><a href="#contact" class="nav-cta">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -161,45 +161,69 @@
     </section>
 
     <!-- Section 4: Neighborhood -->
-    <section id="neighborhood" class="contact-section">
+    <section id="neighborhood" class="neighborhood-section">
         <div class="section-container">
-            <h2 class="section-title">Neighborhood</h2>
-
-            <div class="contact-grid">
-                <div class="map-container">
+            <h2 class="section-title neighborhood-title">Neighborhood</h2>
+            <div class="neighborhood-grid">
+                <div class="neighborhood-map-wrap">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d5812.650327320675!2d-122.41014411603541!3d37.663205182822175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1767148443224!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
                 </div>
+                <div class="neighborhood-lead">
+                    <ul class="neighborhood-highlights">
+                        <li><i class="fas fa-road"></i> Close to Highway 101</li>
+                        <li><i class="fas fa-tree"></i> Quiet, residential street</li>
+                        <li><i class="fas fa-store"></i> Shops &amp; dining nearby</li>
+                        <li><i class="fas fa-bus"></i> Easy public transit access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Section 5: Contact -->
+    <section id="contact" class="contact-section">
+        <div class="section-container">
+            <h2 class="section-title contact-section-title">Get in Touch</h2>
+            <div class="contact-grid">
                 <div class="contact-info">
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
                         <div class="contact-details">
                             <h3>Call Us</h3>
                             <p><a href="tel:+14152030586">(415) 203-0586</a></p>
                         </div>
                     </div>
-
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-globe"></i>
-                        </div>
+                        <div class="contact-icon"><i class="fas fa-globe"></i></div>
                         <div class="contact-details">
                             <h3>Website</h3>
                             <p><a href="https://www.jchowlabs.chat" target="_blank" rel="noopener noreferrer">www.jchowlabs.chat</a></p>
                         </div>
                     </div>
-
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
+                        <div class="contact-icon"><i class="fas fa-clock"></i></div>
                         <div class="contact-details">
                             <h3>Hours</h3>
-                            <p>8:00 AM - 6:00 PM</p>
+                            <p>8:00 AM – 6:00 PM</p>
                         </div>
                     </div>
+                </div>
+                <div class="contact-form-card">
+                    <form class="contact-form" novalidate>
+                        <div class="form-field">
+                            <label for="cf-name">FULL NAME</label>
+                            <input type="text" id="cf-name" name="name" autocomplete="name">
+                        </div>
+                        <div class="form-field">
+                            <label for="cf-phone">TELEPHONE NUMBER</label>
+                            <input type="tel" id="cf-phone" name="phone" autocomplete="tel">
+                        </div>
+                        <div class="form-field">
+                            <label for="cf-message">MESSAGE (OPTIONAL)</label>
+                            <textarea id="cf-message" name="message" rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="form-submit">SEND MESSAGE</button>
+                    </form>
                 </div>
             </div>
         </div>
