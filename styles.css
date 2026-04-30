@@ -1283,6 +1283,9 @@ footer p {
     font-size: 16px;
     color: #333;
   }
+  .va-toast .va-toast-card-secondary .va-swipe-arrow {
+    font-weight: 600;
+  }
 
   /* Close button: hidden in peek, shown in ready/active */
   .va-toast .va-toast-close {

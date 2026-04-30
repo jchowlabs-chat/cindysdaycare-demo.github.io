@@ -36,7 +36,7 @@ var PRIVACY_NOTICE_ENABLED = false;
     var cardPrimary = document.querySelector('.va-toast-card-primary');
     if (cardPrimary) cardPrimary.textContent = 'Voice Assistant';
     var cardSecondary = document.querySelector('.va-toast-card-secondary');
-    if (cardSecondary) cardSecondary.textContent = 'Swipe \u2191 to speak';
+    if (cardSecondary) cardSecondary.innerHTML = '(Swipe <span class="va-swipe-arrow">\u2191</span> to speak)';
     if (wrapper) wrapper.style.display = '';
     window.dispatchEvent(new CustomEvent('privacy-consent-granted'));
   }
@@ -151,7 +151,7 @@ var PRIVACY_NOTICE_ENABLED = false;
 
     if (cardSecondary && s !== 'idle') {
       var isSessionState = s === 'connecting' || s === 'listening' || s === 'speaking';
-      cardSecondary.textContent = isSessionState ? 'Swipe \u2193 to end' : (LABELS[s] || '');
+      cardSecondary.innerHTML = isSessionState ? '(Swipe <span class="va-swipe-arrow">\u2193</span> to end)' : (LABELS[s] || '');
     }
 
     var isActive = s === 'listening' || s === 'speaking';
@@ -436,7 +436,7 @@ var PRIVACY_NOTICE_ENABLED = false;
 
   // ─── Mobile: set initial secondary text ─────────────────────────────────
   if (cardSecondary) {
-    cardSecondary.textContent = 'Swipe \u2191 to speak';
+    cardSecondary.innerHTML = '(Swipe <span class="va-swipe-arrow">\u2191</span> to speak)';
   }
 
   // ─── Helper: expand toast to ready state (mobile) ────────────────────────
@@ -450,7 +450,7 @@ var PRIVACY_NOTICE_ENABLED = false;
     toast.classList.remove('va-toast--ready');
     toast.classList.remove('session-active');
     toast.style.transform = '';
-    if (cardSecondary) cardSecondary.textContent = 'Swipe ↑ to speak';
+    if (cardSecondary) cardSecondary.innerHTML = '(Swipe <span class="va-swipe-arrow">&#x2191;</span> to speak)';
   }
 
   // ─── Desktop: rotating words + attention pulse on load ─────────────────
