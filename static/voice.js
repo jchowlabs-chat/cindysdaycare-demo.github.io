@@ -657,7 +657,7 @@ var PRIVACY_NOTICE_ENABLED = false;
   (function() {
     if (!isMobile()) return;
 
-    var TOAST_H  = 170;
+    var TOAST_H  = 180;
     var PEEK_Y   = 70;
     var READY_Y  = 52;
     var ACTIVE_Y = 0;

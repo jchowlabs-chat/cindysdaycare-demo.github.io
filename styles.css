@@ -1051,7 +1051,7 @@ footer p {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.06);
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.06);
   transition: background 0.3s ease, box-shadow 0.3s ease;
   animation: va-orb-ring-idle 3s ease-in-out infinite;
   cursor: pointer;
@@ -1174,9 +1174,9 @@ footer p {
     left: 20px;
     right: 20px;
     width: auto;
-    height: 170px;
+    height: 180px;
     overflow: hidden;
-    transform: translateY(170px);
+    transform: translateY(180px);
     border-radius: 20px 20px 0 0;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-bottom: none;
@@ -1194,7 +1194,7 @@ footer p {
     box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.18), 0 -1px 8px rgba(0, 0, 0, 0.10);
   }
 
-  /* Visible: toast slides in to PEEK position (100px visible) */
+  /* Visible: toast slides in to PEEK position (110px visible) */
   .va-toast.va-toast--visible {
     opacity: 1;
     pointer-events: auto;
@@ -1258,21 +1258,21 @@ footer p {
     transform: translateY(-50%);
   }
   .va-toast .va-toast-orb {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
   }
   .va-toast .va-toast-orb svg {
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
   }
   .va-toast .va-toast-card-text {
     align-items: center;
   }
   .va-toast .va-toast-card-primary {
-    font-size: 16px;
+    font-size: 20px;
   }
   .va-toast .va-toast-card-secondary {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   /* Close button: hidden in peek, shown in ready/active */
