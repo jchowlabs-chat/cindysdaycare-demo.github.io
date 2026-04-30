@@ -129,8 +129,8 @@ var PRIVACY_NOTICE_ENABLED = false;
     connecting: 'Connecting\u2026',
     listening: 'Listening\u2026',
     speaking: 'Speaking\u2026',
-    error: 'Enable Mic',
-    'mic-blocked': 'Enable Mic'
+    error: 'Allow microphone access',
+    'mic-blocked': 'Allow microphone access'
   };
 
   var cardSecondary = document.querySelector('.va-toast-card-secondary');

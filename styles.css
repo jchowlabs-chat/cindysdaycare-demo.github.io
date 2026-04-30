@@ -1145,6 +1145,12 @@ footer p {
   background: var(--va-grad-error);
 }
 
+.va-toast.error .va-toast-orb {
+  background: var(--va-grad-error);
+  animation: none;
+  box-shadow: none;
+}
+
 /* ── Declined consent: gray orb, clickable to re-open banner ── */
 .va-toast.va-consent-declined {
   cursor: pointer;
