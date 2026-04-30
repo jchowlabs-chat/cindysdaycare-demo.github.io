@@ -1292,7 +1292,6 @@ footer p {
     line-height: 1;
     padding: 0;
   }
-  .va-toast.va-toast--ready .va-toast-close,
   .va-toast.session-active .va-toast-close {
     display: flex;
   }
