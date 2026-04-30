@@ -150,7 +150,8 @@ var PRIVACY_NOTICE_ENABLED = false;
     }
 
     if (cardSecondary && s !== 'idle') {
-      cardSecondary.textContent = LABELS[s] || '';
+      var isSessionState = s === 'connecting' || s === 'listening' || s === 'speaking';
+      cardSecondary.textContent = isSessionState ? 'Swipe \u2193 to end' : (LABELS[s] || '');
     }
 
     var isActive = s === 'listening' || s === 'speaking';
