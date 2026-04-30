@@ -1269,9 +1269,11 @@ footer p {
     align-items: center;
   }
   .va-toast .va-toast-card-primary {
+    font-family: 'Inter', sans-serif;
     font-size: 20px;
   }
   .va-toast .va-toast-card-secondary {
+    font-family: 'Inter', sans-serif;
     font-size: 16px;
   }
 
