@@ -1281,6 +1281,7 @@ footer p {
   .va-toast .va-toast-card-secondary {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
+    color: #333;
   }
 
   /* Close button: hidden in peek, shown in ready/active */
